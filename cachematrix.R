@@ -26,16 +26,26 @@ makeCacheMatrix <- function(x = matrix()) {
 ## if it doesn't already exists, if it calculates the inverse it stores it in the list
 ## if the inverse was calculated it gets printed
 ## if the inverse wasn't calculated but already cached in the list, a message 'getting cached data' is printed before the inverse
+## if no inverse exists (solve throws an error), leave the inverse as NULL and print a message saying the inverse doesn't exist
 
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
-  inv <- x$getinv()
-  if(!is.null(inv)) {
-    message("getting cached data")
-    return(inv)
+  if(nrow(x$get())==ncol(x$get())) {
+    inv <- x$getinv()
+    if(!is.null(inv)) {
+      message("getting cached data")
+      return(inv)
+    }
+    data <- x$get()
+    inv <- tryCatch(solve(data, ...), error = function(cond) {
+      message("No inverse exists")
+      NULL
+      }
+    ) 
+    x$setinv(inv)
+    inv
   }
-  data <- x$get()
-  inv <- solve(data, ...)
-  x$setinv(inv)
-  inv
+  else {
+    message("matrix is not symmetrical, inverse can't be calculated")
+  }
 }
