@@ -1,5 +1,3 @@
-## Put comments here that give an overall description of what your
-## functions do
 
 ## makeCacheMatrix will store a matrix in its variable X
 ## it provides set and get functions for changing the matrix in x
